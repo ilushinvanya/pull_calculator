@@ -1,0 +1,177 @@
+#result {
+  grid-area: result;
+}
+#input {
+  grid-area: input;
+}
+#clear {
+  grid-area: clear;
+}
+#invert(color) {
+  grid-area: invert;
+}
+#percent {
+  grid-area: percent;
+}
+#division {
+  grid-area: division;
+}
+#number_7 {
+  grid-area: number_7;
+}
+#number_8 {
+  grid-area: number_8;
+}
+#number_9 {
+  grid-area: number_9;
+}
+#multiplication {
+  grid-area: multiplication;
+}
+#number_4 {
+  grid-area: number_4;
+}
+#number_5 {
+  grid-area: number_5;
+}
+#number_6 {
+  grid-area: number_6;
+}
+#subtraction {
+  grid-area: subtraction;
+}
+#number_1 {
+  grid-area: number_1;
+}
+#number_2 {
+  grid-area: number_2;
+}
+#number_3 {
+  grid-area: number_3;
+}
+#addition {
+  grid-area: addition;
+}
+#number_0 {
+  grid-area: number_0;
+}
+#dot {
+  grid-area: dot;
+}
+#equally {
+  grid-area: equally;
+}
+body * {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+.calculator {
+  margin: 100px auto;
+  width: 232px;
+  display: grid;
+  grid-template-areas: "input input input input" "result result result result" "clear invert percent division" "number_7 number_8 number_9 multiplication" "number_4 number_5 number_6 subtraction" "number_1 number_2 number_3 addition" "number_0 number_0 dot equally";
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 30px 50px repeat(5, 47px);
+  grid-gap: 1px;
+  background: #585858;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px 0 rgba(0,0,0,0.6);
+  border: 1px #000 solid;
+}
+.calculator > button {
+  outline: none;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  background: #8a8a8a;
+}
+.calculator > button:active {
+  background: #585858;
+}
+.calculator > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #fff;
+  cursor: pointer;
+}
+#result,
+#input {
+  background: #585858;
+  justify-content: flex-end;
+  padding: 0 16px;
+  position: relative;
+  overflow: hidden;
+}
+#result:before,
+#input:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 30px;
+  background: linear-gradient(to right, #585858 70%, transparent);
+}
+#result p,
+#input p {
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+#result p span,
+#input p span {
+  white-space: nowrap;
+}
+#input {
+  font-size: 17px;
+  align-items: flex-end;
+}
+#result {
+  font-size: 33px;
+  align-items: flex-start;
+}
+#percent svg,
+#multiplication svg,
+#invert svg {
+  width: 14px;
+  height: 14px;
+  fill: #fff;
+}
+#division,
+#multiplication,
+#equally,
+#subtraction,
+#addition {
+  background: #f4a33a;
+}
+#division:active,
+#multiplication:active,
+#equally:active,
+#subtraction:active,
+#addition:active {
+  background-color: #c8760b;
+}
+#clear,
+#invert,
+#percent {
+  background: #696969;
+}
+#clear:active,
+#invert:active,
+#percent:active {
+  background-color: #464646;
+}
+#clear:disabled,
+#invert:disabled,
+#percent:disabled {
+  background-color: #464646;
+}
+#clear:disabled svg,
+#invert:disabled svg,
+#percent:disabled svg {
+  fill: #797979;
+}

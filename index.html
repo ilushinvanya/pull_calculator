@@ -1,0 +1,261 @@
+<!doctype html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>Ilushin_test_calc</title>
+</head>
+
+<div id="app"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<script>
+    // В общем и целом.
+    // При клике на кнопку калькулятора выполняется метод "insert" (инсертим операции, числа и точку)
+    // Внутри которого вызывается метод проверки символа (самый большой метод, с многочисленными условиями)
+    // Если проверку проходит, то символ инкрементируется к строке "math_expres".
+    // После обновления строки "math_expres", вычисляемое значение "calc_of_math" вычисляет результат выражения.
+    // В интерфейс выводятся "math_expres" и "calc_of_math" после преобразования вида, заменяются некоторые символы
+    // для соответствия с макетом
+    new Vue({
+        el:"#app",
+        data: {
+            // математическое выражение, которое должно выполниться в eval
+            // следовательно содержит в себе валидное для js математическое выражение
+            math_expres: ""
+        },
+        template:
+            `<div class="calculator">
+                <div id="input"><p><span>{{ input_for_view }}</span></p></div>
+                <div id="result"><p><span>{{ calc_for_view }}</span></p></div>
+
+                <!--// Операции Равно и Очистить -->
+                <button id="clear" @click="clear()">C</button>
+                <button id="equally" @click="calculate()">=</button>
+
+                <!--// Операции: -->
+                <!--// Инвертинг -->
+                <button id="invert" @click="invert()">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="141.293px" height="141.293px" viewBox="0 0 141.293 141.293" style="enable-background:new 0 0 141.293 141.293;" xml:space="preserve">
+                        <g>
+                            <path d="M77.955,109.975c-4.037,0-7.309,3.271-7.309,7.308c0,4.037,3.272,7.31,7.309,7.31h56.029c4.037,0,7.309-3.271,7.309-7.31    c0-4.036-3.271-7.308-7.309-7.308H77.955z"/>
+                            <path d="M0,44.2c0,4.037,3.272,7.308,7.309,7.308h19.489v19.49c0,4.036,3.271,7.309,7.308,7.309c4.037,0,7.309-3.271,7.309-7.309    v-19.49H63.34c4.037,0,7.308-3.271,7.308-7.308c0-4.037-3.271-7.309-7.308-7.309H41.414V12.53c0-4.037-3.272-7.308-7.309-7.308    c-4.037,0-7.308,3.271-7.308,7.308v24.361H7.308C3.272,36.892,0,40.164,0,44.2z"/>
+                            <path d="M131.428,17.261c-2.854-2.855-7.481-2.855-10.336,0L14.763,123.594c-2.853,2.854-2.853,7.481,0,10.334    c1.425,1.429,3.298,2.143,5.167,2.143c1.868,0,3.742-0.714,5.169-2.143L131.428,27.599    C134.283,24.746,134.283,20.114,131.428,17.261z"/>
+                        </g>
+                    </svg>
+                </button>
+
+                <!--// Процент, который не сделал -->
+                <button id="percent" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 448 512">
+                        <path d="M112 224c61.9 0 112-50.1 112-112S173.9 0 112 0 0 50.1 0 112s50.1 112 112 112zm0-160c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zm224 224c-61.9 0-112 50.1-112 112s50.1 112 112 112 112-50.1 112-112-50.1-112-112-112zm0 160c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zM392.3.2l31.6-.1c19.4-.1 30.9 21.8 19.7 37.8L77.4 501.6a23.95 23.95 0 0 1-19.6 10.2l-33.4.1c-19.5 0-30.9-21.9-19.7-37.8l368-463.7C377.2 4 384.5.2 392.3.2z"/>
+                    </svg>
+                </button>
+
+                <!--// Деление -->
+                <button id="division" @click="insert('/')">&#247;</button>
+
+                <!--// Умножение -->
+                <button id="multiplication" @click="insert('*')">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 352 512">
+                        <path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/>
+                    </svg>
+                </button>
+
+                <!--// Вычитание -->
+                <button id="subtraction" @click="insert('-')">&#8722;</button>
+
+                <!--// Сложение -->
+                <button id="addition" @click="insert('+')">+</button>
+
+                <!--// Дробные числа -->
+                <button id="dot" @click="insert('.')">,</button>
+
+                <!--// Цифровая клавиатура -->
+                <button v-for="(n,index) in 10"
+                        :id="'number_' + index"
+                        @click="insert(index)">{{index}}</button>
+
+            </div>`,
+        computed:{
+            input_for_view(){
+                // Для отображения, с пробелами, запятыми, умножением
+                // Преобразовать: 90/2*3.3 => 90 ÷ 2 x 3,3
+
+                let replace_math_expres = this.allReplace(this.math_expres, {
+                    "[\.]": ",",
+                    "[\*]": " x ",
+                    "[\/]": " ÷ ",
+                    "[-]": " – ",
+                    "[+]": " + ",
+                });
+
+                return replace_math_expres;
+            },
+            calc_of_math(){
+                // В данном методе выполняется eval выражения
+                // Затем преобразовывается для отображения
+                let result; // Вернём этот результат
+
+                // Запуск вычисления, до первой удачной попытки
+                let calc_result = this.executes(this.math_expres);
+
+                if( typeof calc_result === "function" ){
+                    result = "Error"
+                    return result;
+                }
+
+                // Проверка на число
+                if( isFinite(calc_result) || calc_result === 0 || !isNaN(calc_result) ){
+
+                    // Округляем, умножаем и делим, что избежать 1.33333333 такого результата
+                    calc_result = Math.floor(calc_result * 1000) / 1000;
+                    result = calc_result.toString();
+                }else{
+                    if ( this.math_expres.length > 1 ){
+                        // Если в выражении что-то есть то это точно ошибка
+                        result = "Error"
+                    }else{
+                        result = ""
+                    }
+                }
+
+                return result;
+
+
+            },
+            calc_for_view(){
+                return this.calc_of_math.replace(".",",")
+            }
+        },
+        methods: {
+            // Простые методы:
+            insert(value){
+                // Функция для вставки символа в поле ввода
+                if ( !this.insertCheck(value) ) {
+                    // Если символ проверку не прошёл, то конец выполнению функции
+                    return false;
+                }
+                this.math_expres += ""; // чтобы была строка
+                this.math_expres += value;
+            },
+            calculate(){
+                // вставить результат вычислений в матем выражение
+                this.math_expres = this.calc_of_math
+            },
+            clear(){
+                this.math_expres = ""
+            },
+            invert(){
+                if ( this.math_expres.charAt(0) === "-" ){
+                    this.math_expres = this.math_expres.slice(1);
+                }else{
+                    this.math_expres = "-" + this.math_expres;
+                }
+            },
+
+            // Самый большой метод с кучей проверок на вставку символа
+            insertCheck(value){
+                // Если предыдущий ответ это Бесконечность или Ошибка, то стереть всё
+                if (this.math_expres.includes("Infinity") || this.math_expres.includes("Error")){
+                    this.clear()
+                }
+
+
+                const last_char_input = this.typeofLastSymbolOfString(this.math_expres);
+                const typeof_value = this.typeofLastSymbolOfString(value);
+
+                // После первого символа 0, можно ставить запятую или операцию
+                // Это случай когда первый ноль, в этом случае нельзя ставить цифру
+                if ( /[/+/-/*//]0$/.test(this.math_expres) ) {
+                    if (typeof_value === "Number"){
+                        return false;
+                    }
+                }
+
+
+                // Нужно заменить ноль цифрой
+                if(this.math_expres === "0" ){
+                    if (typeof_value === "Number"){
+                        this.clear()
+                    }
+                }
+
+                // Нельзя начинать с операции
+                if(this.math_expres === "-" && typeof_value === "Operation"){
+                    return false;
+                }
+
+                // Первый символ не может быть Операция
+                if (last_char_input === "Start" && typeof_value === "Operation"){
+                    return false
+                }
+
+                // Если после запятой идет операция, то удалить запятую
+                if (last_char_input === "Dot" && typeof_value === "Operation"){
+                    this.math_expres = this.math_expres.slice(0, -1);
+                }
+
+                // Если после операции или начала записи ставится запятая, то подставить 0
+                if ((last_char_input === "Operation" || last_char_input === "Start") && typeof_value === "Dot"){
+                    this.math_expres += "0";
+                }
+
+                // Проверка на две и больше запятых
+                if (typeof_value === "Dot"){
+                    if ( (/\d*\.\d*$/.test(this.math_expres)) ){
+                        return false;
+                    }
+                }
+
+                // Если после операции, снова выбирают операцию, то заменить на новую
+                if ( last_char_input === "Operation" &&  typeof_value === "Operation"){
+                    this.math_expres = this.math_expres.slice(0, -1);
+                }
+
+                return true;
+            },
+
+            // Вспомогательные методы:
+            // Возвращает тип последнего символа у target.
+            // Dot, Start, Number, Operation
+            typeofLastSymbolOfString(target){
+                let last_char = target.toString().charAt(target.length - 1);
+
+                if (last_char === "."){
+                    return "Dot";
+                }else if (last_char === ""){
+                    return "Start";
+                }else if ( Number.isInteger(last_char / 1) ){
+                    return "Number";
+                }else if(isNaN(last_char / 1) ){
+                    return "Operation";
+                }
+                return last_char;
+            },
+
+            // Множественный replace у строки
+            allReplace(str, obj_of_rules) {
+                let replaced_string = str;
+                for (let rule in obj_of_rules) {
+                    replaced_string = replaced_string.replace(new RegExp(rule, 'g'), obj_of_rules[rule]);
+                }
+                return replaced_string;
+            },
+
+            // Функция выполняет eval
+            // Если этот eval выполниться с ошибкой, например при выражении "3+"
+            // то циклически повторяется попытка с новым параметром = "Выражение минус последний символ"
+            executes(math_expres){
+        try {
+            let input_calc_result = eval(math_expres);
+            return input_calc_result
+        }catch(e){
+            return executes(math_expres.substring(0, math_expres.length - 1))
+        }
+    }
+        }
+    })
+</script>
