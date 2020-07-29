@@ -249,13 +249,13 @@
             // Если этот eval выполниться с ошибкой, например при выражении "3+"
             // то циклически повторяется попытка с новым параметром = "Выражение минус последний символ"
             executes(math_expres){
-        try {
-            let input_calc_result = eval(math_expres);
-            return input_calc_result
-        }catch(e){
-            return executes(math_expres.substring(0, math_expres.length - 1))
-        }
-    }
+                try {
+                    let input_calc_result = eval(math_expres);
+                    return input_calc_result
+                }catch(e){
+                    return this.executes(math_expres.substring(0, math_expres.length - 1))
+                }
+            }
         }
     })
 </script>
